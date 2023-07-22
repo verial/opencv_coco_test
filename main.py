@@ -55,10 +55,8 @@ def gen():
         try:
             for classId, conf, box in zip(classIds.flatten(), confs.flatten(), bbox):
                 target_center = center_finder(box)
-                move_camera_to_target(target_center, img.shape[1], img.shape[0])
                 cvzone.cornerRect(img, box)
-                rectangle_center = center_finder(box)
-                cv2.circle(img, rectangle_center, 5, (0, 255, 0), cv2.FILLED)
+                cv2.circle(img, target_center, 5, (0, 255, 0), cv2.FILLED)
                 cv2.putText(
                     img,
                     f"{classNames[classId - 1].upper()} {round(conf * 100, 2)}",
@@ -68,10 +66,11 @@ def gen():
                     (0, 255, 0),
                     2,
                 )
+                move_camera_to_target(target_center, img.shape[1], img.shape[0])
                 # print(f'{classNames[classId - 1].upper(), round(conf * 100, 2)}, center = {rectangle_center}')
                 # time.sleep(0.1)
         except Exception:
-            pass
+            continue
         success, buffer = cv2.imencode(".jpg", img)
         frame = buffer.tobytes()
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
