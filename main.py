@@ -20,7 +20,7 @@ def center_finder(box):
 def gen():
     thres = 0.5
     nmsThres = 0.2
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(-1)
     # cap.set(3, 640)
     # cap.set(4, 480)
 
