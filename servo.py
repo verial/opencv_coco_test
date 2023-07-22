@@ -1,7 +1,7 @@
 import serial
 
 #НОМЕР COM ПОРТА
-ser = serial.Serial('COM6', 9600)
+ser = serial.Serial('COM6', 1200)
 ser.close()
 
 image_width = 640
