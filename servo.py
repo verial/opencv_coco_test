@@ -1,12 +1,11 @@
 import serial
 
 #НОМЕР COM ПОРТА
-# ser = serial.Serial('COM1', 2400)
+ser = serial.Serial('COM6', 2400)
 
 
 def send_pelco_d_command(command):
-    # ser.write(command)
-    print(command)
+    ser.write(command)
 
 
 def move_camera_to_target(target_center, image_width, image_height):
