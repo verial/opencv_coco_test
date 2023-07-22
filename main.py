@@ -7,7 +7,6 @@ from servo import move_camera_to_target
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -41,36 +40,19 @@ def gen():
 
     while True:
         success, img = cap.read()
-        classIds, confs, bbox = net.detect(
-            img, confThreshold=thres, nmsThreshold=nmsThres
-        )
-        personIndices = [
-            i
-            for i, classId in enumerate(classIds.flatten())
-            if classNames[classId - 1] == "person"
-        ]
-        classIds = classIds[personIndices]
-        confs = confs[personIndices]
-        bbox = bbox[personIndices]
+        classIds, confs, bbox = net.detect(img, confThreshold=thres, nmsThreshold=nmsThres)
         try:
             for classId, conf, box in zip(classIds.flatten(), confs.flatten(), bbox):
-                target_center = center_finder(box)
-                cvzone.cornerRect(img, box)
-                cv2.circle(img, target_center, 5, (0, 255, 0), cv2.FILLED)
-                cv2.putText(
-                    img,
-                    f"{classNames[classId - 1].upper()} {round(conf * 100, 2)}",
-                    (box[0] + 10, box[1] + 30),
-                    cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    1,
-                    (0, 255, 0),
-                    2,
-                )
-                move_camera_to_target(target_center, img.shape[1], img.shape[0])
-                # print(f'{classNames[classId - 1].upper(), round(conf * 100, 2)}, center = {rectangle_center}')
-                # time.sleep(0.1)
-        except Exception:
-            continue
+                if classNames[classId - 1] == "person":
+                    target_center = center_finder(box)
+                    cvzone.cornerRect(img, box)
+                    cv2.circle(img, target_center, 5, (0, 255, 0), cv2.FILLED)
+                    cv2.putText(img, f'{classNames[classId - 1].upper()} {round(conf * 100, 2)}',
+                                (box[0] + 10, box[1] + 30), cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                                1, (0, 255, 0), 2)
+                    move_camera_to_target(target_center)
+        except:
+            pass
         success, buffer = cv2.imencode(".jpg", img)
         frame = buffer.tobytes()
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
