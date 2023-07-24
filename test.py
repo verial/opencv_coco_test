@@ -1,23 +1,14 @@
-from pelcod import PelcoDevice
+import serial
+
+#НОМЕР COM ПОРТА
+ser = serial.Serial('COM6', 1200)
+ser.close()
 
 
+def send_pelco_d_command(command):
+    ser.open()
+    ser.write(command)
 
+pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x20, 0x00, 0x44]) #
 
-p=PelcoDevice(port='COM2', baudrate=2400,timeout_=0)
-
-p.move_while_stop('DOWN')
-
-p.move_while_stop('UP')
-p.move_while_stop('RIGHT')
-p.move_while_stop('LEFT')
-p.move_while_stop('STOP')
-
-p.move_by_step('RIGHT',0.001)
-
-p.go_to_home()
-
-p.set_preset('\x4D')
-
-p.go_to_preset('\x0B')
-
-p.unconnect()
+send_pelco_d_command(pan_command)
