@@ -27,9 +27,9 @@ def move_camera_to_target(target_center):
         return
 
     if dx != 0:
-        dx = dx // abs(dx)
+        dx = dx // 10
     if dy != 0:
-        dy = dy // abs(dy)
+        dy = dy // 10
 
     if dx < 0: # - лево
         pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x3F, 0x00, 0x44]) #
