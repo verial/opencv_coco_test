@@ -1,16 +1,18 @@
 import serial
+from pelcod import PelcoDevice
 
+p = PelcoDevice(port='COM6', baudrate=1200, timeout_=0)
 #НОМЕР COM ПОРТА
-ser = serial.Serial('COM6', 1200)
-ser.close()
+# ser = serial.Serial('COM6', 1200)
+# ser.close()
 
 image_width = 640
 image_height = 480
 
-def send_pelco_d_command(command):
-    ser.open()
-    ser.write(command)
-    print(command)
+# def send_pelco_d_command(command):
+#     # ser.open()
+#     # ser.write(command)
+#     print(command)
 
 def move_camera_to_target(target_center):
     # Calculate the center of the image
@@ -20,25 +22,22 @@ def move_camera_to_target(target_center):
     dx = target_center[0] - image_center[0]
     dy = target_center[1] - image_center[1]
     # Determine the direction and amount of movement required
-    pan_command = bytearray([])
-    tilt_command = bytearray([])
+    # pan_command = bytearray([])
+    # tilt_command = bytearray([])
 
     if dx == 0 and dy == 0:
         print('Nice')
         return
 
     if dx < 0: # - лево
-        pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x20, 0x00, 0x44]) #
+        p.move_by_step('LEFT', 0.01)
 
     if dx > 0: # + право
-        pan_command = bytearray([0xFF, 0x01, 0x00, 0x02, 0x20, 0x00, 0x23])
+        p.move_by_step('RIGHT', 0.01)
 
     if dy < 0: # + верх
-        tilt_command = bytearray([0xFF, 0x01, 0x00, 0x08, 0x20, 0x3F, 0x48])
+        p.move_by_step('UP', 0.01)
 
     if dy > 0: # - вниз
-        tilt_command = bytearray([0xFF, 0x01, 0x00, 0x10, 0x20, 0x00, 0x31])
-
-    send_pelco_d_command(pan_command)
-    send_pelco_d_command(tilt_command)
+        p.move_by_step('DOWN', 0.01)
     return
