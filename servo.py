@@ -4,8 +4,8 @@ from pelcod import PelcoDevice
 p = PelcoDevice(port='COM6', baudrate=1200, timeout_=0)
 
 #НОМЕР COM ПОРТА
-ser = serial.Serial('COM6', 1200)
-ser.close()
+# ser = serial.Serial('COM6', 1200)
+# ser.close()
 
 image_width = 640
 image_height = 480

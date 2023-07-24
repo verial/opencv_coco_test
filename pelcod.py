@@ -15,6 +15,7 @@ class PelcoDevice:
 
         if port !='':
             self._device=serial.Serial(port,baudrate,timeout=timeout_)
+            self._device.close()
             self._command=Frame()
         else:
             print('No device is specified for connection')
