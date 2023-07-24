@@ -1,7 +1,6 @@
-import serial
 from pelcod import PelcoDevice
 
-p = PelcoDevice(port='COM6', baudrate=1200, timeout_=0)
+p = PelcoDevice(port='COM1', baudrate=1200, timeout_=0)
 
 #НОМЕР COM ПОРТА
 # ser = serial.Serial('COM6', 1200)
