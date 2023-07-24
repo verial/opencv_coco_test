@@ -8,9 +8,9 @@ image_width = 640
 image_height = 480
 
 def send_pelco_d_command(command):
-    if not ser.is_open():
-        ser.open()
+    ser.open()
     ser.write(command)
+    ser.close()
     # print(command)
 
 def move_camera_to_target(target_center):
@@ -21,12 +21,12 @@ def move_camera_to_target(target_center):
     dx = target_center[0] - image_center[0]
     dy = target_center[1] - image_center[1]
     # Determine the direction and amount of movement required
-    pan_command = bytearray([])
-    tilt_command = bytearray([])
+    pan_command = bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
+    tilt_command = bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
 
     if dx == 0 and dy == 0:
         print('Nice')
-        send_pelco_d_command([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
+        send_pelco_d_command(bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01]))
         return
 
     if dx < 0: # - лево
