@@ -29,10 +29,10 @@ def move_camera_to_target(target_center):
         send_pelco_d_command(bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01]))
         return
 
-    if dx < 0: # - право
+    if dx < 0: # + право
         pan_command = bytearray([0xFF, 0x01, 0x00, 0x02, 0x64, 0x00, 0x67])
 
-    if dx > 0: # + лево
+    if dx > 0: # - лево
         pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x64, 0x00, 0x69])
 
     if dy < 0: # + вниз
