@@ -1,12 +1,14 @@
+import os
+
 import cv2
 import cvzone
-from flask import Flask, render_template, Response
-
+from flask import Flask, Response, render_template
 
 from servo import move_camera_to_target
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+exiting = False
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -61,6 +63,19 @@ def gen():
 @app.route("/video_feed")
 def video_feed():
     return Response(gen(), mimetype="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route("/exit")
+def exit_app():
+    global exiting
+    exiting = True
+    return "Done"
+
+
+@app.teardown_request
+def teardown(exception):
+    if exiting:
+        os._exit(0)
 
 
 if __name__ == "__main__":
