@@ -10,7 +10,7 @@ image_height = 480
 def send_pelco_d_command(command):
     ser.open()
     ser.write(command)
-    # print(command)
+    print(command)
 
 def move_camera_to_target(target_center):
     # Calculate the center of the image
@@ -22,7 +22,6 @@ def move_camera_to_target(target_center):
     # Determine the direction and amount of movement required
     pan_command = bytearray([])
     tilt_command = bytearray([])
-    print(dx, dy)
 
     if dx == 0 and dy == 0:
         print('Nice')
