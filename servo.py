@@ -1,16 +1,16 @@
 import serial
 
 #НОМЕР COM ПОРТА
-ser = serial.Serial('COM6', 1200)
-ser.close()
+# ser = serial.Serial('COM6', 1200)
+# ser.close()
 
 image_width = 640
 image_height = 480
 
 def send_pelco_d_command(command):
-    ser.open()
-    ser.write(command)
-    ser.close()
+    # ser.open()
+    # ser.write(command)
+    pass
 
 def move_camera_to_target(target_center):
     # Calculate the center of the image
@@ -22,20 +22,21 @@ def move_camera_to_target(target_center):
     # Determine the direction and amount of movement required
     pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x3F, 0x00])
     tilt_command = bytearray([0xFF, 0x01, 0x00, 0x08, 0x00, 0x3F])
-
+    print(dx, dy)
     if dx == 0 and dy == 0:
         return
+    dx = dx // abs(dx)
+    dy = dy // abs(dy)
+    if dx < 0: # - лево
+        pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x3F, 0x00, 0x44]) #
 
-    if dx < 0:
-        pan_command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x3F, 0x00, 0x44])
-
-    if dx > 0:
+    if dx > 0: # + право
         pan_command = bytearray([0xFF, 0x01, 0x00, 0x02, 0x20, 0x00, 0x23])
 
-    if dy < 0:
+    if dy < 0: # + верх
         tilt_command = bytearray([0xFF, 0x01, 0x00, 0x08, 0x00, 0x3F, 0x48])
 
-    if dy > 0:
+    if dy > 0: # - вниз
         tilt_command = bytearray([0xFF, 0x01, 0x00, 0x10, 0x20, 0x00, 0x31])
 
     send_pelco_d_command(pan_command)
