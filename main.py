@@ -93,7 +93,6 @@ def exit_app():
 @app.teardown_request
 def teardown(exception):
     if exiting:
-        send_pelco_d_command(bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01]))
         os._exit(0)
 
 
