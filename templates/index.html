@@ -1,15 +1,18 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>VIDEO PREVIEW</title>
   </head>
-  <body>
-    <h2>Preview:</h1>
-      <body>Command list:</body>
+<body>
+    <center>
+    <h2>Камера</h1>
       <ul>
-        <li> url/exit to close the app</li>
-        <li> url/video_feed to get video page</li>
+          <a href="http://127.0.0.1:5000/exit" class="btn btn-primary">Остановить выполнение</a> /
+          <a href="http://127.0.0.1:5000/video_feed" class="btn btn-primary">Прямая ссылка на поток</a>
       </ul>
 
     <img src="{{ url_for('video_feed') }}">
+
+  </center>
   </body>
 </html>

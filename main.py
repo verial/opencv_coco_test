@@ -7,9 +7,11 @@ from flask import Flask, Response, render_template
 
 from servo import move_camera_to_target
 
+cap = cv2.VideoCapture(0)
+
 #НОМЕР COM ПОРТА
-ser = serial.Serial('COM6', 1200)
-ser.close()
+# ser = serial.Serial('COM6', 1200)
+# ser.close()
 
 IMAGE_CENTER = (320, 240)
 
@@ -22,9 +24,10 @@ def index():
 
 
 def send_pelco_d_command(command):
-    ser.open()
-    ser.write(command)
-    ser.close()
+    # ser.open()
+    # ser.write(command)
+    # ser.close()
+    print(command)
 
 def center_finder(box):
     rectangle_center = (box[0] + box[2] // 2, box[1] + box[3] // 2)
@@ -34,9 +37,6 @@ def center_finder(box):
 def gen():
     thres = 0.5
     nmsThres = 0.2
-    cap = cv2.VideoCapture(0)
-    # cap.set(3, 640)
-    # cap.set(4, 480)
 
     classNames = []
     classFile = "coco.names"
@@ -51,6 +51,7 @@ def gen():
     net.setInputScale(1.0 / 127.5)
     net.setInputMean((127.5, 127.5, 127.5))
     net.setInputSwapRB(True)
+
     temp_command = None
     while True:
         success, img = cap.read()
@@ -93,8 +94,9 @@ def exit_app():
 @app.teardown_request
 def teardown(exception):
     if exiting:
+        cap.release()
         os._exit(0)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
