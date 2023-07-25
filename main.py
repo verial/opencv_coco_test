@@ -6,12 +6,21 @@ from flask import Flask, Response, render_template
 
 from servo import move_camera_to_target
 
+IMAGE_CENTER = (320, 240)
+
 
 app = Flask(__name__)
 exiting = False
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+def send_pelco_d_command(command):
+    # ser.open()
+    # ser.write(command)
+    # ser.close()
+    print(command)
 
 
 def center_finder(box):
@@ -39,7 +48,7 @@ def gen():
     net.setInputScale(1.0 / 127.5)
     net.setInputMean((127.5, 127.5, 127.5))
     net.setInputSwapRB(True)
-
+    temp_command = None
     while True:
         success, img = cap.read()
         classIds, confs, bbox = net.detect(img, confThreshold=thres, nmsThreshold=nmsThres)
@@ -47,12 +56,18 @@ def gen():
             for classId, conf, box in zip(classIds.flatten(), confs.flatten(), bbox):
                 if classNames[classId - 1] == "person":
                     target_center = center_finder(box)
+                    target_center = target_center[0], target_center[1]                    # Calculate the difference between the target center and the image center
+                    dx = target_center[0] - IMAGE_CENTER[0]
+                    dy = target_center[1] - IMAGE_CENTER[1]
                     cvzone.cornerRect(img, box)
                     cv2.circle(img, target_center, 5, (0, 255, 0), cv2.FILLED)
                     cv2.putText(img, f'{classNames[classId - 1].upper()} {round(conf * 100, 2)}',
                                 (box[0] + 10, box[1] + 30), cv2.FONT_HERSHEY_COMPLEX_SMALL,
                                 1, (0, 255, 0), 2)
-                    move_camera_to_target(target_center)
+                    command = move_camera_to_target(dx, dy)
+                    if temp_command != command:
+                        temp_command = command
+                        send_pelco_d_command(command)
         except:
             pass
         success, buffer = cv2.imencode(".jpg", img)
