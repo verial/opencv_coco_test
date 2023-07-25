@@ -94,7 +94,10 @@ def exit_app():
 @app.teardown_request
 def teardown(exception):
     if exiting:
-        cap.release()
+        try:
+            cap.release()
+        except:
+            pass
         os._exit(0)
 
 
