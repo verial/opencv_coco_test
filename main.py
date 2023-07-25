@@ -2,9 +2,14 @@ import os
 
 import cv2
 import cvzone
+import serial
 from flask import Flask, Response, render_template
 
 from servo import move_camera_to_target
+
+#НОМЕР COM ПОРТА
+ser = serial.Serial('COM6', 1200)
+ser.close()
 
 IMAGE_CENTER = (320, 240)
 
@@ -17,11 +22,9 @@ def index():
 
 
 def send_pelco_d_command(command):
-    # ser.open()
-    # ser.write(command)
-    # ser.close()
-    print(command)
-
+    ser.open()
+    ser.write(command)
+    ser.close()
 
 def center_finder(box):
     rectangle_center = (box[0] + box[2] // 2, box[1] + box[3] // 2)
