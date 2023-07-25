@@ -5,29 +5,32 @@ import cvzone
 import serial
 from flask import Flask, Response, render_template
 
-from servo import move_camera_to_target
+from operators import move_camera_to_target
 
 cap = cv2.VideoCapture(0)
 
-#НОМЕР COM ПОРТА
-# ser = serial.Serial('COM6', 1200)
-# ser.close()
+# НОМЕР COM ПОРТА
+ser = serial.Serial("COM6", 1200)
+ser.close()
 
 IMAGE_CENTER = (320, 240)
 
 
 app = Flask(__name__)
 exiting = False
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
 def send_pelco_d_command(command):
-    # ser.open()
-    # ser.write(command)
-    # ser.close()
+    ser.open()
+    ser.write(command)
+    ser.close()
     print(command)
+
 
 def center_finder(box):
     rectangle_center = (box[0] + box[2] // 2, box[1] + box[3] // 2)
@@ -55,23 +58,39 @@ def gen():
     temp_command = None
     while True:
         success, img = cap.read()
-        classIds, confs, bbox = net.detect(img, confThreshold=thres, nmsThreshold=nmsThres)
+        classIds, confs, bbox = net.detect(
+            img, confThreshold=thres, nmsThreshold=nmsThres
+        )
         try:
             for classId, conf, box in zip(classIds.flatten(), confs.flatten(), bbox):
                 if classNames[classId - 1] == "person":
+
                     target_center = center_finder(box)
-                    target_center = target_center[0], target_center[1]                    # Calculate the difference between the target center and the image center
+                    target_center = (target_center[0], target_center[1],)
+
                     dx = target_center[0] - IMAGE_CENTER[0]
                     dy = target_center[1] - IMAGE_CENTER[1]
+
                     cvzone.cornerRect(img, box)
                     cv2.circle(img, target_center, 5, (0, 255, 0), cv2.FILLED)
-                    cv2.putText(img, f'{classNames[classId - 1].upper()} {round(conf * 100, 2)}',
-                                (box[0] + 10, box[1] + 30), cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                                1, (0, 255, 0), 2)
+                    cv2.putText(
+                        img,
+                        f"{classNames[classId - 1].upper()} {round(conf * 100, 2)}",
+                        (box[0] + 10, box[1] + 30),
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 0), 2,
+                    )
                     command = move_camera_to_target(dx, dy)
+
                     if temp_command != command:
                         temp_command = command
                         send_pelco_d_command(command)
+
+                cv2.putText(
+                    img,
+                    f"{classNames[classId - 1].upper()} {round(conf * 100, 2)}",
+                    (box[0] + 10, box[1] + 30),
+                    cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 0), 2,
+                )
         except:
             pass
         success, buffer = cv2.imencode(".jpg", img)
