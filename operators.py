@@ -8,13 +8,13 @@
 #     (-1, 0): [0xFF, 0x01, 0x00, 0x02, 0x05, 0x00, 0x08],  # Right
 #     (1, 0): [0xFF, 0x01, 0x00, 0x04, 0x05, 0x00, 0x0A],  # Left
 # }
-
+PIXEL_CONSTANT = 3
 
 def move_camera_to_target(dx, dy):
     # Determine the direction and amount of movement required
     if dx == None and dy == None:
         return bytearray([0xFF, 0x01, 0x00, 0x0F, 0x00, 0x00, 0xF0])
-    if (dx <= 7 and dx >= -7) and (dy <= 7 and dy >= -7):
+    if (dx <= PIXEL_CONSTANT and dx >= -PIXEL_CONSTANT) and (dy <= PIXEL_CONSTANT and dy >= -PIXEL_CONSTANT):
         return bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
 
     # if dx != 0:
@@ -22,16 +22,16 @@ def move_camera_to_target(dx, dy):
     # if dy != 0:
     #     dy = dy // abs(dy)
 
-    if dx < -7: # - право
+    if dx < -PIXEL_CONSTANT: # - право
         command = bytearray([0xFF, 0x01, 0x00, 0x02, 0x07, 0x00, 0x0A])
 
-    if dx > 7: # + лево
+    if dx > PIXEL_CONSTANT: # + лево
         command = bytearray([0xFF, 0x01, 0x00, 0x04, 0x07, 0x00, 0x1C])
 
-    if dy < -7: # - вниз
+    if dy < -PIXEL_CONSTANT: # - вниз
         command = bytearray([0xFF, 0x01, 0x00, 0x10, 0x07, 0x00, 0x18])
 
-    if dy > 7: # + вверх
+    if dy > PIXEL_CONSTANT: # + вверх
         command = bytearray([0xFF, 0x01, 0x00, 0x08, 0x07, 0x00, 0x10])
 
     # direction = (dx, dy)
