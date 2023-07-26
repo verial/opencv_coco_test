@@ -1,9 +1,18 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Video Streaming Demonstration</title>
+    <title>VIDEO PREVIEW</title>
   </head>
-  <body>
-    <h1>Video Streaming Demonstration</h1>
+<body>
+    <center>
+    <h2>Камера</h1>
+      <ul>
+          <a href="http://127.0.0.1:5000/exit" class="btn btn-primary">Остановить выполнение</a> /
+          <a href="http://127.0.0.1:5000/video_feed" class="btn btn-primary">Прямая ссылка на поток</a>
+      </ul>
+
     <img src="{{ url_for('video_feed') }}">
+
+  </center>
   </body>
 </html>
