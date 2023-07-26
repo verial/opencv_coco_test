@@ -15,11 +15,13 @@ def move_camera_to_target(dx, dy):
     if dx == None and dy == None:
         return bytearray([0xFF, 0x01, 0x00, 0x0F, 0x00, 0x00, 0xF0])
     if dx == 0 and dy == 0:
-        print("Nice")
+        print("Centred")
         return bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
 
-    dx = dx // abs(dx)
-    dy = dy // abs(dy)
+    if dx != 0:
+        dx = dx // abs(dx)
+    if dy != 0:
+        dy = dy // abs(dy)
 
     direction = (dx, dy)
     return bytearray(BYTE_ARRAYS[direction])
