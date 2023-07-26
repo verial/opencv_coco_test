@@ -105,6 +105,7 @@ def video_feed():
 
 @app.route("/exit")
 def exit_app():
+    ser.write(bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01]))
     global exiting
     exiting = True
     return "Done"
@@ -117,7 +118,6 @@ def teardown(exception):
             cap.release()
         except:
             pass
-        ser.write(bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01]))
         os._exit(0)
 
 
