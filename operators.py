@@ -14,7 +14,7 @@ def move_camera_to_target(dx, dy):
     # Determine the direction and amount of movement required
     if dx == None and dy == None:
         return bytearray([0xFF, 0x01, 0x00, 0x0F, 0x00, 0x00, 0xF0])
-    if (dx <= PIXEL_CONSTANT and dx >= -PIXEL_CONSTANT) and (dy <= PIXEL_CONSTANT and dy >= -3):
+    if (dx <= 3 and dx >= -3) and (dy <= 3 and dy >= -3):
         return bytearray([0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01])
 
     # if dx != 0:
