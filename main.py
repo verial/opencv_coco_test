@@ -10,7 +10,7 @@ from operators import move_camera_to_target
 cap = cv2.VideoCapture(0)
 
 # НОМЕР COM ПОРТА
-ser = serial.Serial("COM6", 1200)
+ser = serial.Serial("COM5", 1200)
 ser.close()
 
 IMAGE_CENTER = (320, 240)
